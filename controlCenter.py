@@ -5,8 +5,8 @@ class ControlCenter():
         GPIO.setmode(GPIO.BCM)
         self.luces=luces
         self.agua=agua
-        GPIO.setup(self.luces, GPIO.OUT, GPIO.HIGH)
-        GPIO.setup(self.agua, GPIO.OUT, GPIO.HIGH)
+        GPIO.setup(self.luces, GPIO.OUT, initial=GPIO.HIGH)
+        GPIO.setup(self.agua, GPIO.OUT, initial=GPIO.HIGH)
         self.luces_on = False
         self.agua_on= False
     
