@@ -15,7 +15,7 @@ def home():
     if request.method == "POST":
         print(request.form["name"])
         print(request.form["email"])
-        ControlCenter.toggle_luces()
+        CONTROL_CENTER.toggle_luces()
         return render_template('home.html')
     return render_template('home.html')
 
