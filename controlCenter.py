@@ -5,10 +5,10 @@ import time
 import sched
 import threading
 
-DURACION = 3 * 60
+DURACION = .5 * 30 #3 * 60
 
 class ControlCenter():
-    def __init__(self, luces=4, agua=27, horas_programadas = [10, 12, 14, 16]) -> None:
+    def __init__(self, luces=4, agua=27, horas_programadas = [35, 36, 37, 38]) -> None:
         self.luces=luces
         self.agua=agua
         self.horas_programadas = self.gather_times(horas_programadas)
