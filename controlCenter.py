@@ -12,7 +12,7 @@ class ControlCenter():
         if horas_programadas is None: 
             horas_programadas = []
             ahora = datetime.datetime.now()
-            for i in range(1, 4):
+            for i in range(0, 3):
                 horas_programadas.append(ahora.minute + i)
         self.luces=luces
         self.agua=agua
