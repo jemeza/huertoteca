@@ -54,6 +54,7 @@ class ControlCenter():
     def prender_agua(self):
         if self.agua == False:
             self.toggle_agua()
+
     def apagar_agua(self):
         if self.agua == True:
             self.toggle_agua()
@@ -97,7 +98,7 @@ class ControlCenter():
         curr_time = datetime.datetime.now()
         time_array = []
         for minute in times:
-            if minute < 60:
+            if minute > 60:
                 minute %=60
             if minute < curr_time.minute:
                 #schedule for the next day
