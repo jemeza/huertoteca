@@ -8,7 +8,7 @@ import threading
 DURACION = .5 * 30 #3 * 60
 
 class ControlCenter():
-    def __init__(self, luces=4, agua=27, horas_programadas = [39, 40, 41]) -> None:
+    def __init__(self, luces=4, agua=27, horas_programadas = [44, 45, 46]) -> None:
         self.luces=luces
         self.agua=agua
         self.horas_programadas = self.gather_times(horas_programadas)
@@ -21,8 +21,13 @@ class ControlCenter():
         
         self.schedule = sched.scheduler(time.time, time.sleep)
         self.set_schedule()
-        t1 = threading.Thread( target = self.schedule.run)
+        t1 = threading.Thread(target = self.schedule.run)
         t1.start()
+        
+    def evento_poner_show(self, scheduled_time):
+        next_time = scheduled_time + datetime.timedelta(minutes=3)
+        self.schedule.enterabs(next_time.timestamp(), 1, self.print_schedule, kwargs = {"scheduled_time":next_time})
+        self.poner_show()
         
     def poner_show(self):
         self.prender_agua()
@@ -74,12 +79,12 @@ class ControlCenter():
     
     def set_schedule(self):
         for time_of_event in self.horas_programadas:
-            self.schedule.enterabs(time_of_event.timestamp(), 1, self.poner_show, kwargs = {"scheduled_time":time_of_event})
+            self.schedule.enterabs(time_of_event.timestamp(), 1, self.evento_poner_show, kwargs = {"scheduled_time":time_of_event})
         
     def print_schedule(self, scheduled_time):
         print("printing")
         next_time = scheduled_time+ datetime.timedelta(minutes=3)
-        self.schedule.enterabs(next_time.timestamp(), 1, self.poner_show, kwargs = {"scheduled_time":next_time})
+        self.schedule.enterabs(next_time.timestamp(), 1, self.evento_poner_show, kwargs = {"scheduled_time":next_time})
     
     def gather_times(self, times) -> list:
         curr_time = datetime.datetime.now()
