@@ -8,7 +8,7 @@ import threading
 DURACION = .5 * 30 #3 * 60
 
 class ControlCenter():
-    def __init__(self, luces=4, agua=27, horas_programadas = [44, 45, 46]) -> None:
+    def __init__(self, luces=4, agua=27, horas_programadas = [50, 51, 52]) -> None:
         self.luces=luces
         self.agua=agua
         self.horas_programadas = self.gather_times(horas_programadas)
