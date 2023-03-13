@@ -30,8 +30,8 @@ class ControlCenter():
         t1.start()
         
     def evento_poner_show(self, scheduled_time, duracion=DURACION):
-        next_time = scheduled_time + datetime.timedelta(minutes=3)
         if scheduled_time is not None:
+            next_time = scheduled_time + datetime.timedelta(minutes=3)
             self.schedule.enterabs(next_time.timestamp(), 1, self.evento_poner_show, kwargs = {"scheduled_time":next_time})
         self.poner_show(duracion)
         
