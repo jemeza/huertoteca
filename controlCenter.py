@@ -73,7 +73,7 @@ class ControlCenter():
     
     
     def set_schedule(self):
-        for time_of_event in self.times:
+        for time_of_event in self.horas_programadas:
             self.schedule.enterabs(time_of_event.timestamp(), 1, self.poner_show, kwargs = {"scheduled_time":time_of_event})
         
     def print_schedule(self, scheduled_time):
