@@ -30,6 +30,7 @@ class ControlCenter():
         self.poner_show()
         
     def poner_show(self):
+        print("poniendo show")
         self.prender_agua()
         self.prender_luces()
         self.tocar_sonido()
