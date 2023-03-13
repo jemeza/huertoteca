@@ -1,5 +1,5 @@
 import RPi.GPIO as GPIO
-from playsound import playsound
+# from playsound import playsound
 import datetime
 import time
 import sched
