@@ -8,7 +8,7 @@ import threading
 DURACION = .5 * 30 #3 * 60
 
 class ControlCenter():
-    def __init__(self, luces=4, agua=27, horas_programadas = [35, 36, 37, 38]) -> None:
+    def __init__(self, luces=4, agua=27, horas_programadas = [39, 40, 41]) -> None:
         self.luces=luces
         self.agua=agua
         self.horas_programadas = self.gather_times(horas_programadas)
@@ -85,6 +85,8 @@ class ControlCenter():
         curr_time = datetime.datetime.now()
         time_array = []
         for minute in times:
+            if minute < 60:
+                minute %=60
             if minute < curr_time.minute:
                 #schedule for the next day
                 # add one day
