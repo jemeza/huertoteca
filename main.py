@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from controlCenter import ControlCenter
+import datetime
 
 
 PIN_DE_LUCES = 4
@@ -19,7 +20,7 @@ def home():
     if request.method == "POST":
         print(request.form["name"])
         print(request.form["email"])
-        CONTROL_CENTER.poner_show()
+        CONTROL_CENTER.schedule.enterabs(datetime.datetime.now(), 2, CONTROL_CENTER.evento_poner_show, kwargs = {"scheduled_time":None, "duracion":.25 * 60})
         return render_template('home.html')
     return render_template('home.html')
 
