@@ -37,7 +37,7 @@ class ControlCenter():
         
     def poner_show(self, duracion=DURACION):
         print("poniendo show")
-        self.prender_agua()
+        self.poner_agua()
         self.prender_luces()
         self.tocar_sonido(duracion)
         self.apagar_agua()
@@ -51,7 +51,8 @@ class ControlCenter():
         if self.luces_on == True:
             self.toggle_luces()
     
-    def prender_agua(self):
+    def poner_agua(self):
+        print("prender agua")
         if self.agua == False:
             self.toggle_agua()
 
@@ -72,6 +73,7 @@ class ControlCenter():
             self.luces_on = False
     
     def toggle_agua(self):
+        print("in adding time")
         if self.agua_on == False:
             GPIO.output(self.agua, GPIO.LOW)
             print("on")
