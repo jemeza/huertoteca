@@ -53,11 +53,11 @@ class ControlCenter():
     
     def poner_agua(self):
         print("prender agua")
-        if self.agua == False:
+        if self.agua_on == False:
             self.toggle_agua()
 
     def apagar_agua(self):
-        if self.agua == True:
+        if self.agua_on == True:
             self.toggle_agua()
             
     def tocar_sonido(self, duracion=DURACION):
