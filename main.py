@@ -22,7 +22,7 @@ def home():
         print(request.form["email"])
         tiempo_actual = datetime.datetime.now().timestamp()
         # tiempo_actual = tiempo_actual + datetime.timedelta(seconds=1)
-        CONTROL_CENTER.schedule.enterabs(tiempo_actual.timestamp(), 2, CONTROL_CENTER.evento_poner_show, kwargs = {"scheduled_time":None, "duracion":.25 * 60})
+        CONTROL_CENTER.schedule.enterabs(tiempo_actual, 2, CONTROL_CENTER.evento_poner_show, kwargs = {"scheduled_time":None, "duracion":.25 * 60})
         return render_template('home.html')
     return render_template('home.html')
 
