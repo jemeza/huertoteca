@@ -1,11 +1,11 @@
 import RPi.GPIO as GPIO
-# from playsound import playsound
+import pygame
 import datetime
 import time
 import sched
 import threading
 
-DURACION = .25 * 60 #3 * 60
+DURACION = 60 #3 * 60
 
 class ControlCenter():
     def __init__(self, luces=4, agua=27, horas_programadas = None) -> None:
@@ -13,11 +13,13 @@ class ControlCenter():
             horas_programadas = []
             ahora = datetime.datetime.now()
             for i in range(0, 3):
-                horas_programadas.append(ahora.minute + i)
+                horas_programadas.append(ahora.minute + i*4)
         self.luces=luces
         self.agua=agua
         self.horas_programadas = self.gather_times(horas_programadas)
         
+        pygame.mixer.init()
+        pygame.mixer.music.load("sonido_lluvia_y_trueno.mp3")
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.luces, GPIO.OUT, initial=GPIO.HIGH)
         GPIO.setup(self.agua, GPIO.OUT, initial=GPIO.HIGH)
@@ -31,7 +33,7 @@ class ControlCenter():
         
     def evento_poner_show(self, scheduled_time, duracion=DURACION):
         if scheduled_time is not None:
-            next_time = scheduled_time + datetime.timedelta(minutes=3)
+            next_time = scheduled_time + datetime.timedelta(minutes=12)
             self.schedule.enterabs(next_time.timestamp(), 1, self.evento_poner_show, kwargs = {"scheduled_time":next_time})
         self.poner_show(duracion)
         
@@ -61,8 +63,10 @@ class ControlCenter():
             self.toggle_agua()
             
     def tocar_sonido(self, duracion=DURACION):
-        time.sleep(duracion)
-        # playsound('audio.mp3')
+        for _ in range(3):
+            pygame.mixer.music.play()
+            time.sleep(duracion)
+        pygame.mixer.music.stop()
             
     def toggle_luces(self):
         if self.luces_on == False:
