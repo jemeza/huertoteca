@@ -19,7 +19,7 @@ app = Flask(__name__)
 def home():
     if request.method == "POST":
         if request.form["submit_button"] == "tormenta":
-            # CONTROL_CENTER.poner_show()
+            CONTROL_CENTER.poner_show()
             print("poniendo show")
             if CONTROL_CENTER.horario_en_pausa:
                 return render_template('tormenta_en_pausa.html')
@@ -28,14 +28,14 @@ def home():
         elif request.form["submit_button"] == "pausar":
             print("pausando")
             if CONTROL_CENTER.horario_en_pausa != True:
-                # CONTROL_CENTER.clear_schedule()
+                CONTROL_CENTER.clear_schedule()
                 CONTROL_CENTER.horario_en_pausa = True
             return render_template('tormenta_en_pausa.html')
         
         elif request.form["submit_button"] == "continuar":
             print("continuando")
             if CONTROL_CENTER.horario_en_pausa:
-                # CONTROL_CENTER.set_schedule()
+                CONTROL_CENTER.set_schedule()
                 CONTROL_CENTER.horario_en_pausa = False
                 pass
             return render_template('home.html')

@@ -19,10 +19,10 @@ MINUTOS = 3 # Cambiar aqui el numero de minutos
 
 HORARIO = [
     (12, 30),
-    (2, 0),
-    (4, 0),
-    (6, 0),
-    (7, 0)
+    (14, 0),
+    (16, 0),
+    (20, 40),
+    (20, 45)
 ]
 
 
