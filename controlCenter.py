@@ -20,9 +20,9 @@ MINUTOS = 3 # Cambiar aqui el numero de minutos
 HORARIO = [
     (12, 30),
     (14, 0),
-    (20, 57),
-    (21, 2),
-    (21, 6)
+    (21, 20),
+    (21, 24),
+    (21, 26)
 ]
 
 
@@ -33,7 +33,6 @@ class ControlCenter():
     def __init__(self, luces=4, agua=27) -> None:
         self.luces=luces
         self.agua=agua
-        self.horas_programadas = self.gather_times()
         
         pygame.mixer.init()
        
@@ -117,6 +116,7 @@ class ControlCenter():
     
     
     def set_schedule(self):
+        self.horas_programadas = self.gather_times()
         sched_queue = self.schedule.queue
         if len(sched_queue) != 0:
             return
@@ -130,6 +130,7 @@ class ControlCenter():
             return
         for scheduled_event in sched_queue:
             self.schedule.cancel(scheduled_event)
+        print("scheduled times cleared", self.schedule.queue)
         
     def print_schedule(self, scheduled_time):
         print("printing")
@@ -144,7 +145,7 @@ class ControlCenter():
                 minute %=60
             if hour >= 24:
                 hour %= 24
-            if hour < curr_time.hour:
+            if hour < curr_time.hour  or (hour == curr_time.hour and minute < curr_time.minute):
                 next_time = curr_time + datetime.timedelta(days=1)
                 next_time = datetime.datetime(year=next_time.year, 
                                               month=next_time.month, 
