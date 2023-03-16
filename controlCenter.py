@@ -47,8 +47,8 @@ class ControlCenter():
         self.show_mutex = Lock()
         self.schedule = sched.scheduler(time.time, time.sleep)
         self.set_schedule()
-        t1 = threading.Thread(target = self.schedule.run)
-        t1.start()
+        self.t1_scheduler = threading.Thread(target = self.schedule.run)
+        self.t1_scheduler.start()
         
     def evento_poner_show(self, scheduled_time, duracion=DURACION):
         if scheduled_time is not None:
@@ -113,7 +113,12 @@ class ControlCenter():
     
     
     
-    
+    def restart_schedule(self):
+        self.t1_scheduler.join()
+        self.set_schedule()
+        self.t1_scheduler = threading.Thread(target = self.schedule.run)
+        self.t1_scheduler.start()
+        
     
     def set_schedule(self):
         self.horas_programadas = self.gather_times()
@@ -145,7 +150,7 @@ class ControlCenter():
                 minute %=60
             if hour >= 24:
                 hour %= 24
-            if hour < curr_time.hour  or (hour == curr_time.hour and minute < curr_time.minute):
+            if hour < curr_time.hour  or (hour == curr_time.hour and minute <= curr_time.minute):
                 next_time = curr_time + datetime.timedelta(days=1)
                 next_time = datetime.datetime(year=next_time.year, 
                                               month=next_time.month, 

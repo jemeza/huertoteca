@@ -35,7 +35,7 @@ def home():
         elif request.form["submit_button"] == "continuar":
             print("continuando")
             if CONTROL_CENTER.horario_en_pausa:
-                CONTROL_CENTER.set_schedule()
+                CONTROL_CENTER.restart_schedule()
                 CONTROL_CENTER.horario_en_pausa = False
                 pass
             return render_template('home.html')
