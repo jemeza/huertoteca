@@ -4,19 +4,36 @@ import datetime
 import time
 import sched
 import threading
+from threading import Lock
 
-DURACION = 60 #3 * 60
+DURACION = 60 # No tocar
+
+
+##################################################################
+##### LO QUE SE PUEDE MODIFICAR
+##### NO TOCAR NADA FUERA DE ESTOS RENGLONES
+
+MINUTOS = 3 # Cambiar aqui el numero de minutos
+
+# (hora, minuto)
+
+HORARIO = [
+    (12, 30),
+    (2, 0),
+    (4, 0),
+    (6, 0),
+    (7, 0)
+]
+
+
+#################################################################
+
 
 class ControlCenter():
-    def __init__(self, luces=4, agua=27, horas_programadas = None) -> None:
-        if horas_programadas is None: 
-            horas_programadas = []
-            ahora = datetime.datetime.now()
-            for i in range(0, 3):
-                horas_programadas.append(ahora.minute + i*4)
+    def __init__(self, luces=4, agua=27) -> None:
         self.luces=luces
         self.agua=agua
-        self.horas_programadas = self.gather_times(horas_programadas)
+        self.horas_programadas = self.gather_times()
         
         pygame.mixer.init()
         pygame.mixer.music.load("sonido_lluvia_y_trueno.mp3")
@@ -26,6 +43,9 @@ class ControlCenter():
         self.luces_on = False
         self.agua_on= False
         
+        self.horario_en_pausa = False
+        
+        self.show_mutex = Lock()
         self.schedule = sched.scheduler(time.time, time.sleep)
         self.set_schedule()
         t1 = threading.Thread(target = self.schedule.run)
@@ -33,17 +53,21 @@ class ControlCenter():
         
     def evento_poner_show(self, scheduled_time, duracion=DURACION):
         if scheduled_time is not None:
-            next_time = scheduled_time + datetime.timedelta(minutes=12)
+            next_time = scheduled_time + datetime.timedelta(days=1)
             self.schedule.enterabs(next_time.timestamp(), 1, self.evento_poner_show, kwargs = {"scheduled_time":next_time})
         self.poner_show(duracion)
         
     def poner_show(self, duracion=DURACION):
         print("poniendo show")
+        self.show_mutex.acquire()
+        
         self.poner_agua()
         self.prender_luces()
         self.tocar_sonido(duracion)
         self.apagar_agua()
         self.apagar_luces()
+        
+        self.show_mutex.release()
         
     def prender_luces(self):
         if self.luces_on == False:
@@ -63,7 +87,7 @@ class ControlCenter():
             self.toggle_agua()
             
     def tocar_sonido(self, duracion=DURACION):
-        for _ in range(3):
+        for _ in range(MINUTOS):
             pygame.mixer.music.play()
             time.sleep(duracion)
         pygame.mixer.music.stop()
@@ -92,35 +116,45 @@ class ControlCenter():
     
     
     def set_schedule(self):
+        sched_queue = self.schedule.queue
+        if len(sched_queue) != 0:
+            return
         for time_of_event in self.horas_programadas:
             self.schedule.enterabs(time_of_event.timestamp(), 1, self.evento_poner_show, kwargs = {"scheduled_time":time_of_event})
+        print(self.schedule.queue)
+    
+    def clear_schedule(self):
+        sched_queue = self.schedule.queue
+        if len(sched_queue) == 0:
+            return
+        for scheduled_event in sched_queue:
+            self.schedule.cancel(scheduled_event)
         
     def print_schedule(self, scheduled_time):
         print("printing")
         next_time = scheduled_time+ datetime.timedelta(minutes=3)
         self.schedule.enterabs(next_time.timestamp(), 1, self.evento_poner_show, kwargs = {"scheduled_time":next_time})
     
-    def gather_times(self, times) -> list:
+    def gather_times(self) -> list:
         curr_time = datetime.datetime.now()
         time_array = []
-        for minute in times:
+        for hour, minute in HORARIO:
             if minute >= 60:
                 minute %=60
-            if minute < curr_time.minute:
-                #schedule for the next day
-                # add one day
-                # TODO: change for prod
+            if hour >= 24:
+                hour %= 24
+            if hour < curr_time.hour:
                 next_time = curr_time + datetime.timedelta(days=1)
                 next_time = datetime.datetime(year=next_time.year, 
                                               month=next_time.month, 
                                               day=next_time.day, 
-                                              hour=next_time.hour, 
+                                              hour=hour, 
                                               minute=minute)
             else:
                 next_time = datetime.datetime(year=curr_time.year, 
                                               month=curr_time.month, 
                                               day=curr_time.day, 
-                                              hour=curr_time.hour, 
+                                              hour=hour, 
                                               minute=minute)
             time_array.append(next_time)
         return time_array

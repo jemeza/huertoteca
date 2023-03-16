@@ -18,12 +18,30 @@ app = Flask(__name__)
 @app.route('/', methods=["POST", "GET"])
 def home():
     if request.method == "POST":
-        print(request.form["name"])
-        print(request.form["email"])
-        tiempo_actual = datetime.datetime.now()
-        tiempo_actual = tiempo_actual + datetime.timedelta(seconds=.5)
-        CONTROL_CENTER.schedule.enterabs(tiempo_actual.timestamp(), 2, CONTROL_CENTER.evento_poner_show, kwargs = {"scheduled_time":None, "duracion":.25 * 60})
-        return render_template('home.html')
+        if request.form["submit_button"] == "tormenta":
+            # CONTROL_CENTER.poner_show()
+            print("poniendo show")
+            if CONTROL_CENTER.horario_en_pausa:
+                return render_template('tormenta_en_pausa.html')
+            else: 
+                return render_template('home.html')
+        elif request.form["submit_button"] == "pausar":
+            print("pausando")
+            if CONTROL_CENTER.horario_en_pausa != True:
+                # CONTROL_CENTER.clear_schedule()
+                CONTROL_CENTER.horario_en_pausa = True
+            return render_template('tormenta_en_pausa.html')
+        
+        elif request.form["submit_button"] == "continuar":
+            print("continuando")
+            if CONTROL_CENTER.horario_en_pausa:
+                # CONTROL_CENTER.set_schedule()
+                CONTROL_CENTER.horario_en_pausa = False
+                pass
+            return render_template('home.html')
+        
+    if CONTROL_CENTER.horario_en_pausa:
+        return render_template('tormenta_en_pausa.html') 
     return render_template('home.html')
 
 if __name__ == '__main__':
