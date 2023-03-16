@@ -20,9 +20,9 @@ MINUTOS = 3 # Cambiar aqui el numero de minutos
 HORARIO = [
     (12, 30),
     (14, 0),
-    (16, 0),
-    (20, 40),
-    (20, 45)
+    (20, 57),
+    (21, 2),
+    (21, 6)
 ]
 
 
@@ -36,7 +36,7 @@ class ControlCenter():
         self.horas_programadas = self.gather_times()
         
         pygame.mixer.init()
-        pygame.mixer.music.load("sonido_lluvia_y_trueno.mp3")
+       
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.luces, GPIO.OUT, initial=GPIO.HIGH)
         GPIO.setup(self.agua, GPIO.OUT, initial=GPIO.HIGH)
@@ -87,6 +87,7 @@ class ControlCenter():
             self.toggle_agua()
             
     def tocar_sonido(self, duracion=DURACION):
+        pygame.mixer.music.load("sonido_lluvia_y_trueno.mp3")
         for _ in range(MINUTOS):
             pygame.mixer.music.play()
             time.sleep(duracion)
