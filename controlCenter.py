@@ -13,16 +13,27 @@ DURACION = 60 # No tocar
 ##### LO QUE SE PUEDE MODIFICAR
 ##### NO TOCAR NADA FUERA DE ESTOS RENGLONES
 
-MINUTOS = 3 # Cambiar aqui el numero de minutos
+MINUTOS = 1 # Cambiar aqui el numero de minutos
 
 # (hora, minuto)
 
 HORARIO = [
+    (11, 30),
+    (12, 0),
     (12, 30),
-    (14, 0),
-    (16, 0),
-    (18, 0),
-    (19, 0)
+    (13,0),
+    (13, 30),
+    (14,0), 
+    (14,30), 
+    (15,0),
+    (15,30),
+    (16,0),
+    (16,30), 
+    (17,0),
+    (17,30),
+    (18,0),
+    (18,30),
+    (19,0)
 ]
 
 
